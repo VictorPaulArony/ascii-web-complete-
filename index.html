@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ascii Art Web Page</title>
+    <style>
+        body{
+            background-image: url('/images.png');
+            background-color: #0b7c9e;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .red { color: red; }
+        .blue { color: blue; }
+        .black { color: black; }
+        .orange { color: orange; }
+        .green { color: green; }
+    </style>
+</head>
+<body>
+    <form method="post" action="/">
+        <h1>Complete Ascii Art Website</h1>
+        <div id="text">
+            <textarea name="Word" placeholder="Input Your Text Here"></textarea>
+        </div>
+        <div id="files">
+            <select name="Files">
+                <option value="standard.txt">Standard</option>
+                <option value="shadow.txt">Shadow</option>
+                <option value="thinkertoy.txt">Thinkertoy</option>
+            </select>
+        </div>
+        <div id="color">
+            <select name="Colors">
+                <option value="black">None</option>
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="orange">Orange</option>
+                <option value="green">Green</option>
+            </select>
+        </div>
+        <button type="submit" id="submit">Submit</button>
+    </form>
+    <pre>
+        <div id="result">
+            <h2>Display Ascii Result</h2>
+            <span class="{{.Color}}">
+                {{.Result}}
+            </span>
+        </div>
+    </pre>
+</body>
+</html>
