@@ -36,10 +36,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	if strings.Contains(word, "\n") {
 		slice := strings.Split(word, "\r\n")
 		for _, char := range slice {
-			result.WriteString(Inputs([]string{char, files}))
+			result.WriteString(Inputs(w, []string{char, files}))
 		}
 	} else {
-		result.WriteString(Inputs([]string{word, files}))
+		result.WriteString(Inputs(w, []string{word, files}))
 	}
 
 	data := Data{
@@ -59,8 +59,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Inputs(input []string) string {
-	inputs := strings.ReplaceAll(input[0], "\\n", "\n")
+func Inputs(w http.ResponseWriter, input []string) string {
 	filenames := input[1]
-	return ascii.Ascii(inputs, filenames)
+	return ascii.Ascii(w, input[0], filenames)
 }
