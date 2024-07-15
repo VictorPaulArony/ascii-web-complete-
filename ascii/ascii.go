@@ -2,41 +2,13 @@ package ascii
 
 import (
 	"bufio"
-	"fmt"
+	"net/http"
 	"os"
 	"strings"
 )
 
-func Files(filename string) ([]string, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	if err := scanner.Err(); err != nil {
-		return nil, err
-	}
-	return lines, nil
-}
-
-func PrintWord(input string, content []string) string {
-	slice := make([]string, 9)
-
-	for _, char := range input {
-		for i := 0; i < 9; i++ {
-			slice[i] += content[int(char-32)*9+i]
-		}
-	}
-	return strings.Join(slice, "\n")
-}
-
-func Ascii(input string, filename string) string {
+// Ascii generates ASCII art for the given input string using the specified filename.
+func Ascii(w http.ResponseWriter, input string, filename string) string {
 	if input == "" {
 		return ""
 	}
@@ -47,7 +19,7 @@ func Ascii(input string, filename string) string {
 
 	content, err := Files(filename)
 	if err != nil {
-		fmt.Println("Error reading file:", err)
+		http.Error(w, "404: File Not Found", http.StatusNotFound)
 		return ""
 	}
 
@@ -67,6 +39,19 @@ func Ascii(input string, filename string) string {
 	return res.String()
 }
 
+// PrintWord generates ASCII art for the given word using the provided content.
+func PrintWord(input string, content []string) string {
+	slice := make([]string, 9)
+
+	for _, char := range input {
+		for i := 0; i < 9; i++ {
+			slice[i] += content[int(char-32)*9+i]
+		}
+	}
+	return strings.Join(slice, "\n")
+}
+
+// English checks if the given word contains only ASCII characters.
 func English(words string) bool {
 	for _, word := range words {
 		if word < 32 || word > 126 {
@@ -74,4 +59,23 @@ func English(words string) bool {
 		}
 	}
 	return true
+}
+
+// Files reads the content of a file and returns it as a slice of strings.
+func Files(filename string) ([]string, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	return lines, nil
 }
